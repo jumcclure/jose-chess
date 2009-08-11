@@ -1,0 +1,50 @@
+<project basedir="." name="Jose" >
+	
+  <property value="src/java" name="src.dir" />
+  <property value="lib" name="build.lib" />
+  
+  <!--Insert the proper path to the JAR runtime libraries in the statement below-->  
+  <property value="/usr/lib/jvm/java-6-sun-1.6.0.14/lib/" name="jdk.lib"/>
+  
+  <property value="/usr/share/java" name="java.lib" />
+  <property value="build" name="build.dir" />
+  <property value="${build.dir}/classes" name="classes.dir" />
+  <property value="${build.dir}/jar" name="jar.dir" />
+  <property value="de.jose.Main" name="main-class" />
+  <path id="build.classpath" >
+    <fileset includes="**/*.jar" dir="${build.lib}" />
+    <fileset includes="**/*.jar" dir="${jdk.lib}" />
+    <fileset includes="**/*.jar" dir="${java.lib}" />
+    <fileset dir="${classes.dir}" />
+  </path>
+  
+  <target name="clean" >
+    <delete dir="${build.dir}" />
+  </target>
+  
+  <target name="compile" >
+    <mkdir dir="${classes.dir}" />
+    <javac destdir="${classes.dir}" srcdir="${src.dir}" >
+      <compilerarg value="-Xlint:unchecked" />
+      <classpath refid="build.classpath" />
+    </javac>
+  </target>
+  
+  <target depends="compile" name="jar" >
+    <mkdir dir="${jar.dir}" />
+    <jar basedir="${classes.dir}" destfile="${jar.dir}/${ant.project.name}.jar" >
+      <manifest>
+        <attribute value="${main-class}" name="Main-Class" />
+      </manifest>
+    </jar>
+  </target>
+  
+  <target depends="jar" name="run" >
+    <java fork="true" jar="${jar.dir}/${ant.project.name}.jar" />
+  </target>
+  
+  <target depends="clean,jar" name="clean-build" />
+  
+  <target depends="clean,run" name="main" />
+
+</project>
