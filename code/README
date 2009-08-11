@@ -1,0 +1,203 @@
+PROJECT
+-------
+
+Jose-chess is a very nice chess program, actually the only one which met all
+my requirements, but one, which was being able to set the strength of the
+computer while playing against the computer. That is why I started working on
+it.
+
+This project is written by Peter Schaefer who holds the copyright. Since it
+was published on Sourceforge.net, I believe it is open source software, but I
+have not been able to find a copyright notice anywhere on the page or in the
+source tree. If someone has found it, or believes I am in error, please notify
+me immediately.
+
+The project homepage can be found on:
+http://jose-chess.sourceforge.net/index.html
+
+And the author's published e-mail address is:
+peterschaefer_ATH_users_ADOTH_sourceforge_ADOTH_net
+
+Unfortunately Peter doesn't seem to respond to his e-mail anymore, and
+neither is any maintenance being done to Jose.
+
+I am trying to keep the project alive, and I am seeking assistance in having
+the project available on Sourceforge for further development. Also, the
+correct copyright messages should be added, and credit should be given to
+Peter Schaefer as author of the work.
+
+My contribution so far was to make the project compilable in Linux, and
+adding a minor setting to adjust the strength of the chess engine. I hope
+that eventually the project is published properly so more people can
+contribute.
+
+Downloading
+-----------
+
+The source can be downloaded as jose-145-source.zip. This file contains all
+source files, .jar files, library files and the compiled Jose.jar file. (Note
+the capital 'J' in Jose.jar.)
+
+This is NOT the installation file. The installation file must be downloaded
+from sourceforge.net for your platform, installed, and ONLY the jose.jar file
+should be replaced or linked to.
+
+Compiling
+---------
+
+Compiling proved to be a major challenge in Linux, as no instructions or make
+files were available, a number of libraries were missing, and some Java files
+did not overload a large number of abstract classes.
+
+Currently, the program compiles in Linux (Debian Lenny), using Java JDK 1.4,
+JDK 1.5 or JDK 1.6. and the Javac compiler. I haven't made any changes which
+could prevent the source to be compiled in Windows or on a Mac, but I have not
+been able to test it. It does not compile correctly with GNU's GJC, but that
+might be an issue of not calling the compiler correctly.
+
+The program runs in Linux using JRE 1.5 or JRE 1.6 using Sun's Java. It does
+NOT run with GNU's java interpreter GIJ.
+
+I compiled the source tree using ant. (http://ant.apache.org/) The build.xml
+file is contained in the root of the source directory. Calling ant is easy:
+ant compile	: compile
+ant build	: compile and build
+ant jar		: compile build, create .jar file
+ant clean	: remove all built and compiled files
+
+You have to review the build.xml file to check if the settings like
+classpath, compiler options and JDK path are correct.
+
+The original source code is in a tree like this:
+
+jose
+  |_java
+  |  |_ de
+  |  |_ org
+  |  |_ osbaldeston
+  |
+  |_c
+     |_ ...
+     |_ ...
+
+I found that the c source was not needed, perhaps the compiled C objects were
+included somewhere in the lib directory.
+
+To compile the java source, you need to set up a directory structure like
+this:
+
+jose
+ |_THIS_FILE
+ |_build.xml
+ |_src
+ |  |_java
+ |  |  |_ de
+ |  |  |_ org
+ |  |  |_ osbaldeston
+ |  |
+ |  |_c
+ |     |_ ...
+ |     |_ ...
+ |_build
+ |  |_ jar
+ |  |_ ...
+ |_lib
+    |_ ...
+    |_ ...
+
+
+src: holds everything which is downloaded in de ZIP file from
+sourceforge.net, version 1.4.4
+
+build: contains all jar files compiled with ant. build/jar contains the
+completer Jose.jar file.
+
+lib: holds all additional external jar files. Partially they come from the
+installation of jose, partially they were found on the web and
+downloaded for compilation	
+
+The ZIP file as dowloaded from me (currently know as 1.4.5 and up) also
+contains a directory called obj. I don't know how it came there, maybe from
+previous attempts to compile. It doesn't do any harm.
+If you wish to compile the C-sources as well, some additional configuration
+and makefiles are needed. I might have compiled the C source files, and the
+object files might or might not be needed for the build of Jose. I don't
+know, and I don't want to check it out now. If they were compiled by me, it
+was done during previous building attempts, which does NOT work now anymore.
+
+Running
+-------
+
+To run the newly compiled jar file, create a link from the directory where
+jose was installed originally to this compiled file. The directory structure
+as created during the install cannot be omitted! In Windows you should copy
+the newly created .jar file to the existing Jose directory.
+
+I have been running the result on Linux only. I don't have any Windows or Mac
+machines available for testing.
+
+There are some problems with 3D mode. Either it doesn't run at all, or the
+viewport remains white. It happens mainly with older (< 2003 VGA cards). For
+debugging this issue, use these statements:
+export J2D_TRACE_LEVEL=4
+java -Dsun.java2d.opengl=true -jar jose.jar
+
+There is a problem with the slider object in some GTK libraries when running
+in GTK+ look and feel: the slider direction is opposite with the mouse
+direction. E.g. when the mouse moves right, the slider moves left. I have
+fixed this in my version by reversing the slider in GTK mode. But in some
+versions now the entire slider is reversed, although the movement of the
+slider is synchronized with the mouse.
+
+What I added:
+-------------
+
+Most chess engines perform as good and as strong as possible. That is nice
+for good players, but discouraging for average players, and worthless for
+novices. Not all of us hold an ELO rating of 2200+ (I have *never* been able
+to beat a computer chess game myself) Unfortunately almost all chess front
+ends do not allow to adjust the engine's strenght. In Jose I have been able
+to find out how to do that and to add the setting.
+
+Xboard and UCI protocol chess engines allow to set the depth (that is the
+number of levels that they consider) and the number of nodes to search for a
+correct move. These numbers are NOT an option setting for the engine, they
+have to be set with each move, which has advantages and disadvantages. I
+added a depth setting in the engine options dialog.
+
+The disadvantage is that this setting has to be built in the part which
+communicates with the chess engine. Currently this only works for UCI
+engines. It has not been added for Xboard communicattion. Although the option
+is not hidden, it simply isn't implemented!
+
+The advantage is that you can set the depth for each move, and can change it
+during the game.
+
+When setting the level too low, the engine's moves become predictable and the
+game gets boring. 
+
+I am considering to add a random setting to the depth, which intends to add
+or substract a random figure from the depth setting. The randomness will make
+the engine much less predictable, and make that it has smart and stupid
+moments. The amount of randomness makes the change in smartness more or less.
+Just like human :)
+
+A second option I was thinking about is to set the maximum number of nodes
+to consider. However this is more difficult to determine, as the nodes are
+dependent on the depth (which we know), the number of pieces on the board
+(which is known, but not be me how to retrieve them from the program), and
+the position of the pieces and what influence that has on the number of nodes
+(which is completely unknown by me). I am not willing to make myself familiar
+with chess engine design, but I am willing to follow any directions of people
+who know what figures make sense.
+
+Contact
+-------
+
+You can contact me at jlinkels_ATH_linkels_ADOTH_net or
+jlinkels_ATH_rnw_ADOTH_an.
+
+
+
+
+ 
